@@ -1,0 +1,18 @@
+{
+  "search_terms": "",
+  "from": 0,
+  "size": 25,
+  "sort": {
+    "sort_by": "",
+    "ascending": true
+  },
+  "filters": {
+    "geography": {
+      "state": [],
+      "zip": "",
+      "radius": 0,
+      "msa": [],
+      "city": [],
+      "county": []
+    }
+  }

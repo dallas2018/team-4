@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import { Alert, Button, Text, View, ActivityIndicator, TextInput, TouchableOpacity } from 'react-native';
+import { Alert, Button, Text, View, ActivityIndicator, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 
 import { createTabNavigator, createStackNavigator, createSwitchNavigator, NavigationActions, createBottomTabNavigator } from 'react-navigation';
 
@@ -16,7 +16,6 @@ import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { SellDashboard, BuyDashboard } from './Dashboard';
 
-import {SetPreferencesScreen} from './SetPreferences';
 
 export default class App extends React.Component {
   constructor(){
@@ -136,6 +135,41 @@ class SignUpScreen extends React.Component {
     )
   }
 }
+
+class SetPreferencesScreen extends Component {
+  updateFirebase = () => {
+    const { navigate } = this.props.navigation;
+    let uid = firebase.auth().currentUser.uid;
+
+    firebase.database().ref('users').child(uid).update({
+      sellerRating: 0,
+      buyerRating: 0,
+      pastSales: {},
+      pastPurchases: {},
+      activeSales: {},
+      totalDonated: 0,
+      causePoints: 0,
+    });
+    navigate('Welcome');
+  }
+
+
+
+  render() {
+
+    return (
+      <View>
+      <ScrollView>
+        <Text>Hello world!</Text>
+      </ScrollView>
+      <TouchableOpacity onPress={this.updateFirebase}>
+        <Text>{'Join The Cause'}</Text>
+      </TouchableOpacity>
+      </View>
+    );
+  }
+}
+
 
 class LoginScreen extends React.Component {
   constructor(){
