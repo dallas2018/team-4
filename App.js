@@ -35,7 +35,7 @@ export default class App extends React.Component {
 
 class LoginWithFacebookButton extends Component {
   onLoginOrRegister = () => {
-    LoginManager.logInWithReadPermissions(['public_profile', 'email'])
+    LoginManager.logInWithReadPermissions('330588247717220', permission { ['public_profile', 'email'] })
       .then((result) => {
         if (result.isCancelled) {
           return Promise.reject(new Error('The user cancelled the request'));
@@ -74,6 +74,21 @@ class LoadingScreen extends Component {
     navigate('Login');
     //})
   }
+  
+  
+  async loginWithFacebook() {
+    const {type, token} = await Expo.Facebook.logInWithReadPermissionsAsync('330588247717220', permission { ['public_profile', 'email'] })
+    
+    if (type == 'success') {
+      const credential = firebase.auth.FacebookAuthProvider.credential(token)
+      
+      firebase.auth().signInWithCredential(credential).catch((error) => {
+        console.log(error)
+      })
+    }
+    
+  }
+  
   render() {
     return (
       <View>
@@ -136,7 +151,9 @@ class SignUpScreen extends React.Component {
   }
 }
 
-class SetPreferencesScreen extends Component {
+<TouchableOpacity style = {authStyles.buttonContainer} onPress = {this.loginWithFacebook()}>
+
+class SetPreferencesScreen extends {
   updateFirebase = () => {
     const { navigate } = this.props.navigation;
     let uid = firebase.auth().currentUser.uid;
@@ -151,7 +168,7 @@ class SetPreferencesScreen extends Component {
       causePoints: 0,
     });
     navigate('Welcome');
-  }
+}
 
 
 
@@ -168,6 +185,14 @@ class SetPreferencesScreen extends Component {
       </View>
     );
   }
+}
+
+componentDidMount() {
+  firebase.auth().onStateChanged((user) => {
+    if (user != null) {
+      console.log(user)
+    }
+  })
 }
 
 
