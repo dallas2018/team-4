@@ -146,12 +146,13 @@ class SignUpScreen extends React.Component {
         <TouchableOpacity style = {authStyles.buttonContainer} onPress={() => navigate('Login')}>
           <Text  style={authStyles.buttonText}>{"Already have an account? Log in"}</Text>
         </TouchableOpacity>
+        <TouchableOpacity style = {authStyles.buttonContainer} onPress = {this.loginWithFacebook()}>
+          <Text  style={authStyles.buttonText}>{"Sign In with Facebook"}</Text>
+        </TouchableOpacity>
       </View>
     )
   }
 }
-
-<TouchableOpacity style = {authStyles.buttonContainer} onPress = {this.loginWithFacebook()}>
 
 class SetPreferencesScreen extends {
   updateFirebase = () => {
