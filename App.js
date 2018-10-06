@@ -10,13 +10,13 @@ import * as firebase from 'firebase';
 
 import { styles, authStyles, colors } from './styles';
 
-import {appRegConfig } from './config'
+import {appRegConfig } from './config';
 
-import { Dashboard } from './Dashboard'
+import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 
-import { AccessToken, LoginManager } from 'react-native-fbsdk';
+import { SellDashboard, BuyDashboard } from './Dashboard';
 
-import{ FBLoginButton } from './FBLoginButton';
+import {SetPreferencesScreen} from './SetPreferences';
 
 export default class App extends React.Component {
   constructor(){
@@ -97,7 +97,7 @@ class SignUpScreen extends React.Component {
     firebase
       .auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then(() => navigate('Welcome'))
+      .then(() => navigate('SetPrefs'))
       .catch(error => this.setState({ errorMessage: error.message }))
   }
   render() {
@@ -182,8 +182,6 @@ class LoginScreen extends React.Component {
             <Text  style={authStyles.buttonText}>{"Don't have an account? Sign Up"}</Text>
           </TouchableOpacity>
           <View style={styles.container}>
-            <Text>{'Welcome to the Facebook SDK for React Native!'}</Text>
-            <FBLoginButton />
           </View>
         </View>
       )
@@ -194,44 +192,48 @@ class LoginScreen extends React.Component {
       super();
     }
 
-    componentDidMount() {
-      this.registerForPushNotifications();
-    }
-
-    registerForPushNotifications = async () => {
-      const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-      let finalStatus = status;
-      console.log(finalStatus);
-      if (status !== 'granted'){
-        const {status} = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-        finalStatus = status;
-      }
-
-      if (finalStatus !== 'granted') { return; }
-
-      let expoTok = await Notifications.getExpoPushTokenAsync();
-      let fireTok = await Notifications.getDevicePushTokenAsync();
-      let uid = firebase.auth().currentUser.uid;
-
-      firebase.database().ref("users").child(uid).update({
-        expoToken: expoTok,
-        fireToken: fireTok,
-      })
-    }
     render() {
       return (
         <TabNavigator/>
       )
     }
   }
-
+const TabNavigator = createBottomTabNavigator(
+  {
+  SellDash: {screen: SellDashboard,
+    navigationOptions: {
+          tabBarIcon: ({ tintColor }) => (
+            <FontAwesome name="dashboard" size={30} color={tintColor} />
+          )
+        }},
+  BuyDash: {screen: BuyDashboard,
+    navigationOptions: {
+          tabBarIcon: ({ tintColor }) => (
+            <MaterialCommunityIcons name="tag-heart" size={30} color={tintColor} />
+          )
+        }}
+  }, {
+  tabBarOptions: {
+    activeTintColor: colors.colorOne,
+    showLabel: false,
+    style: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    tabStyle: {
+      alignItems: 'center',
+      justifyContent: 'center'
+    }
+}
+}
+);
 const RootSwitchNavigator = createSwitchNavigator({
   Loading: { screen: LoadingScreen },
   Login: { screen: LoginScreen },
   SignUp: {screen: SignUpScreen },
   Welcome: { screen: WelcomeScreen },
-
-  Main: {screen: Dashboard }
+  SetPrefs: { screen: SetPreferencesScreen}
 
 })
 const AppNavigation = () => (
